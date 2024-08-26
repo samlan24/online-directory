@@ -17,6 +17,7 @@ google = oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     userinfo_endpoint='https://www.googleapis.com/oauth2/v1/userinfo',
+    jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
     client_kwargs={'scope': 'openid profile email'},
 )
 
@@ -38,18 +39,35 @@ def login():
 
 @auth.route('/authorize')
 def authorize():
-    google = oauth.create_client('google')
-    token = google.authorize_access_token()
-    resp = google.get('userinfo')
-    user_info = resp.json()
-    user = Agent.query.filter_by(email=user_info['email']).first()
-    if user is None:
-        user = Agent(name=user_info['name'], email=user_info['email'])
-        db.session.add(user)
-        db.session.commit()
-    session['user_id'] = user.id
-    flash('You were successfully logged in')
-    return redirect(url_for('auth.profile'))
+    try:
+        google = oauth.create_client('google')
+        token = google.authorize_access_token()
+        print("Token:", token)  # Debugging: Print token
+
+        if not token:
+            print("Failed to retrieve token")
+            return "Failed to retrieve token", 400
+
+        resp = google.get('userinfo')
+        user_info = resp.json()
+        print("User Info:", user_info)  # Debugging: Print user info
+
+        if 'email' not in user_info:
+            print("Failed to retrieve user info")
+            return "Failed to retrieve user info", 400
+
+        user = Agent.query.filter_by(email=user_info['email']).first()
+        if user is None:
+            user = Agent(name=user_info['name'], email=user_info['email'])
+            db.session.add(user)
+            db.session.commit()
+
+        session['user_id'] = user.id
+        flash('You were successfully logged in')
+        return redirect(url_for('auth.profile'))
+    except Exception as e:
+        print("Error during authorization:", e)  # Debugging: Print error
+        return "Internal Server Error", 500
 
 
 @auth.route('/logout')
