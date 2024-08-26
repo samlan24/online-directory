@@ -5,7 +5,7 @@ class Agent(db.Model):
     __tablename__ = 'agents'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    email = db.Column(db.String(64), unique=True)
+    email = db.Column(db.String(120), unique=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
 
     # method to return a dictionary of the agent

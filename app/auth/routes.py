@@ -27,6 +27,7 @@ google = oauth.register(
 def register():
     google = oauth.create_client('google')
     redirect_uri = url_for('auth.authorize', _external=True)
+    print("Redirect URI:", redirect_uri)  # Debugging: Print redirect URI
     return google.authorize_redirect(redirect_uri)
 
 # create a route for login
@@ -49,6 +50,10 @@ def authorize():
             return "Failed to retrieve token", 400
 
         resp = google.get('userinfo')
+        if not resp:
+            print("Failed to retrieve user info response")
+            return "Failed to retrieve user info response", 400
+
         user_info = resp.json()
         print("User Info:", user_info)  # Debugging: Print user info
 
@@ -58,9 +63,15 @@ def authorize():
 
         user = Agent.query.filter_by(email=user_info['email']).first()
         if user is None:
-            user = Agent(name=user_info['name'], email=user_info['email'])
-            db.session.add(user)
-            db.session.commit()
+            try:
+                user = Agent(name=user_info['name'], email=user_info['email'])
+                db.session.add(user)
+                db.session.commit()
+                print("User created:", user)  # Debugging: Print user creation
+            except Exception as db_error:
+                print("Database error:", db_error)  # Debugging: Print database error
+                db.session.rollback()
+                return "Database error", 500
 
         session['user_id'] = user.id
         flash('You were successfully logged in')
