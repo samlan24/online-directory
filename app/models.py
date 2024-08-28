@@ -1,5 +1,5 @@
 from app import db
-
+from werkzeug.security import generate_password_hash, check_password_hash
 # Agent model
 class Agent(db.Model):
     __tablename__ = 'agents'
@@ -7,6 +7,20 @@ class Agent(db.Model):
     name = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(120), unique=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
+    password_hash = db.column(db.string(128))
+
+
+    @property
+    def password(self):
+        raise AttributeError('password not readable')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 
     # method to return a dictionary of the agent
     def to_dict(self):
