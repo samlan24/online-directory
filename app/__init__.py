@@ -17,7 +17,8 @@ def create_app():
     login_manager.init_app(app)
     bootstrap.init_app(app)
 
-
+    # secret key
+    app.config['SECRET_KEY'] = 'hello'
     # import models
     from app.models import Location, Agent
 
