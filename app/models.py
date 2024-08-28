@@ -7,7 +7,7 @@ class Agent(db.Model):
     name = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(120), unique=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
-    password_hash = db.column(db.string(128))
+    password_hash = db.column(db.String(128))
 
 
     @property
