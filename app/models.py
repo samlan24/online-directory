@@ -1,6 +1,7 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
+from flask_login import UserMixin, login_required
+from . import login_manager
 # Agent model
 class Agent(UserMixin, db.Model):
     __tablename__ = 'agents'
@@ -21,6 +22,11 @@ class Agent(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return Agent.query.get(int(user_id))
 
 
     # method to return a dictionary of the agent
