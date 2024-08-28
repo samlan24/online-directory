@@ -1,7 +1,8 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 # Agent model
-class Agent(db.Model):
+class Agent(UserMixin, db.Model):
     __tablename__ = 'agents'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -9,7 +10,7 @@ class Agent(db.Model):
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     password_hash = db.column(db.String(128))
 
-
+    # password hashing
     @property
     def password(self):
         raise AttributeError('password not readable')
