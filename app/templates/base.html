@@ -11,25 +11,23 @@
         <a class="navbar-brand" href="{{ url_for('main.index') }}">Online Directory</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign Out</a>
-                </li>
-                {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign out</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">Sign In</a>
-                </li>
-                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.about') }}">About</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a>
                 </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign Out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Sign In</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
