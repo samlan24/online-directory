@@ -8,7 +8,7 @@ class Agent(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(120), unique=True)
-    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
     password_hash = db.column(db.String(128))
 
     # password hashing
@@ -28,16 +28,6 @@ class Agent(UserMixin, db.Model):
     def load_user(user_id):
         return Agent.query.get(int(user_id))
 
-
-    # method to return a dictionary of the agent
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'location': self.location.name
-        }
-
     def __repr__(self):
         return '<Agent %r>' % self.name
 
@@ -47,14 +37,6 @@ class Location(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     agents = db.relationship('Agent', backref='location', lazy=True)
-
-    # method to return a dictionary of the location
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'agents': [agent.name for agent in self.agents]
-        }
 
     def __repr__(self):
         return '<Location %r>' % self.name
