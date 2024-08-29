@@ -3,9 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from app.config import Config
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
+migrate = Migrate()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -16,6 +18,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     bootstrap.init_app(app)
+    migrate.init_app(app, db)
 
     # secret key
     app.config['SECRET_KEY'] = 'hello'

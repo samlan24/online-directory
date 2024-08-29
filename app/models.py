@@ -9,7 +9,7 @@ class Agent(UserMixin, db.Model):
     name = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(120), unique=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
-    password_hash = db.column(db.String(128))
+    password_hash = db.Column(db.String(255))
 
     # password hashing
     @property
@@ -29,7 +29,7 @@ class Agent(UserMixin, db.Model):
         return Agent.query.get(int(user_id))
 
     def __repr__(self):
-        return '<Agent %r>' % self.name
+        return f'<Agent {self.name}, {self.email}>'
 
 # Location model
 class Location(db.Model):
