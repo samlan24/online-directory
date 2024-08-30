@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
 from app.models import Agent
@@ -19,14 +19,22 @@ class RegistrationForm(FlaskForm):
                                                                                             'numbers, dots or underscores')])
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('password2', message='Passwords not matching')])
     password2 = PasswordField('password2', validators=[DataRequired()])
+    location = SelectField('Location', coerce=int)
+    description = TextAreaField('Description', validators=[Length(0, 255)])
     Submit = SubmitField('Register')
 
-# check if email is in use
-def validate_email(self, field):
-    if Agent.query.filter_by(email=field.data).first():
-        raise ValidationError('Email already registered.')
+    # check if email is in use
+    def validate_email(self, field):
+        if Agent.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered.')
 
-# check if username is in use
-def validate_name(self, field):
-    if Agent.query.filter_by(name=field.data).first():
-        raise ValidationError('name already in use.')
+    # check if username is in use
+    def validate_name(self, field):
+        if Agent.query.filter_by(name=field.data).first():
+            raise ValidationError('name already in use.')
+
+class EditProfileForm(FlaskForm):
+    name = StringField('Real name', validators=[Length(0, 64)])
+    location = StringField('Location', validators=[Length(0, 64)])
+    description = TextAreaField('About me')
+    submit = SubmitField('Submit')

@@ -34,7 +34,7 @@
           </li>
           {% endif %} {% if current_user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.agent', username=current_user.username) }}">
+            <a class="nav-link" href="{{ url_for('main.agent', name=current_user.name) }}">
               Profile
             </a>
           </li>
