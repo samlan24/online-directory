@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1>Welcome to Home Helper Directory</h1>
+            <p>Your one-stop solution for finding real estate agents, movers, and cleaners.</p>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2>Hello, {{ current_user.name }}</h2>
+                    {% if current_user.is_authenticated %}
+                        <p><strong>Name:</strong> {{ current_user.name }}</p>
+                        <p><strong>Email:</strong> {{ current_user.email }}</p>
+                        <p><strong>Description:</strong> {{ current_user.description }}</p>
+                        <p><strong>Location:</strong> {{ current_user.location }}</p>
+                    {% else %}
+                        <p>Stranger</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

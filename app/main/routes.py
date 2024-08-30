@@ -10,8 +10,18 @@ main = Blueprint('main', __name__, template_folder='templates', static_folder='s
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    featured_agents = Agent.query.limit(3).all()
+    return render_template('index.html', featured_agents=featured_agents)
 
+@main.route('/find agent')
+def find_agent():
+    users = Agent.query.all()
+    return render_template('find_agent.html', users=users)
+
+@main.route('/agent/<int:user_id>')
+def agent_detail(user_id):
+    user = Agent.query.get_or_404(user_id)
+    return render_template('agent_details.html', user=user)
 
 @main.route('/about')
 def about():

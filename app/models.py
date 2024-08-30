@@ -61,7 +61,7 @@ class Location(db.Model):
     agents = db.relationship('Agent', backref='location', lazy=True)
 
     def __repr__(self):
-        return '<Location %r>' % self.name
+        return f'{self.name}'
 
 class Role(db.Model):
     __tablename__ = 'roles'
