@@ -1,7 +1,9 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_required
+from flask import current_app
 from . import login_manager
+from datetime import datetime
 # Agent model
 class Agent(UserMixin, db.Model):
     __tablename__ = 'agents'
@@ -9,7 +11,27 @@ class Agent(UserMixin, db.Model):
     name = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(120), unique=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(255))
+    description = db.Column(db.String(255))
+    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+
+
+    # defining default role for new agents
+    def __init__(self, **kwargs):
+        super(Agent, self).__init__(**kwargs)
+        if self.role is None:
+            if self.email == current_app.config['ADMIN_EMAIL']:
+                self.role = Role.query.filter_by(permissions=0xff).first()
+            if self.role is None:
+                self.role = Role.query.filter_by(default=True).first()
+    # role verification
+    def can(self, permissions):
+        return self.role is not None and \
+            (self.role.permissions & permissions) == permissions
+
+    def is_admin(self):
+        return self.can(Permission.Administer)
 
     # password hashing
     @property
@@ -40,3 +62,32 @@ class Location(db.Model):
 
     def __repr__(self):
         return '<Location %r>' % self.name
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    default = db.Column(db.Boolean, default=False, index=True)
+    permissions = db.Column(db.Integer)
+    agents = db.relationship('Agent', backref='role', lazy=True)
+
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'Agent': (Permission.AddService, False),
+            'Admin': (Permission.Administer, True)
+        }
+        for r in roles:
+            role = Role.query.filter_by(name=r).first()
+            if role is None:
+                role = Role(name=r)
+            role.permissions = roles[r][0]
+            role.default = roles[r][1]
+            db.session.add(role)
+        db.session.commit()
+
+
+class Permission:
+    Administer = 0x80
+    AddService = 0x01

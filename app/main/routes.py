@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
+from app.models import Agent
 
 """ blueprint for main routes """
 
@@ -22,3 +23,10 @@ def contact():
 @main.route('/search')
 def search():
     return render_template('search.html')
+
+@main.route('/agent/<username>')
+def agent(username):
+    user = Agent.query.filter_by(name=username).first()
+    if user is None:
+        abort(404)
+    return render_template('agent.html', user=user)
