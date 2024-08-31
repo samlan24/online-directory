@@ -13,10 +13,20 @@
                 <div class="card-body">
                     <h2>Hello, {{ current_user.name }}</h2>
                     {% if current_user.is_authenticated %}
+                        <img src="{{ url_for('static', filename=current_user.image_url) }}" alt="Profile Image" class="img-thumbnail">
                         <p><strong>Name:</strong> {{ current_user.name }}</p>
                         <p><strong>Email:</strong> {{ current_user.email }}</p>
                         <p><strong>Description:</strong> {{ current_user.description }}</p>
                         <p><strong>Location:</strong> {{ current_user.location }}</p>
+                        {% if user == current_user %}
+                        <a class="btn btn-default" href="{{ url_for('.edit_profile') }}">
+                          Edit Profile
+                        </a>
+                        <a class="btn btn-default" href="{{ url_for('.delete_profile') }}">
+                            Delete Profile
+                          </a>
+
+                        {% endif %}
                     {% else %}
                         <p>Stranger</p>
                     {% endif %}

@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, FileField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
+from flask_wtf.file import FileAllowed, FileRequired
 from app.models import Agent
 
 # form to login
@@ -20,6 +21,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), EqualTo('password2', message='Passwords not matching')])
     password2 = PasswordField('password2', validators=[DataRequired()])
     location = SelectField('Location', coerce=int)
+    image = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     description = TextAreaField('Description', validators=[Length(0, 255)])
     Submit = SubmitField('Register')
 
@@ -35,6 +37,11 @@ class RegistrationForm(FlaskForm):
 
 class EditProfileForm(FlaskForm):
     name = StringField('Real name', validators=[Length(0, 64)])
-    location = StringField('Location', validators=[Length(0, 64)])
+    location = SelectField('Location', coerce=int)
     description = TextAreaField('About me')
+    image = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField('Submit')
+
+
+class DeleteProfileForm(FlaskForm):
+    submit = SubmitField('Delete Account')

@@ -1,17 +1,14 @@
-{% extends "base.html" %}
-
-{% block title %}Agent Detail{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Agent Detail{% endblock %} {% block
+content %}
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1>{{ user.name }}</h1>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Description:</strong> {{ user.description }}</p>
-            <p><strong>Location:</strong> {{ user.location }}</p>
-            <p><strong>Member Since:</strong> {{ user.member_since }}</p>
-        </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h1>{{ user.name }}</h1>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Description:</strong> {{ user.description }}</p>
+      <p><strong>Location:</strong> {{ user.location }}</p>
+      <p><strong>Member Since:</strong> {{ user.member_since }}</p>
     </div>
+  </div>
 </div>
 {% endblock %}

@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, abort, redirect, url_for
-from app.models import Agent
-from app.auth.forms import EditProfileForm
-from flask_login import current_user
+from flask import Blueprint, render_template, abort, flash, request, redirect, url_for
+from app.models import Agent, Location
+from app.auth.forms import EditProfileForm, DeleteProfileForm
+from flask_login import current_user, login_required, logout_user
 from app import db
 
 """ blueprint for main routes """
@@ -44,17 +44,41 @@ def agent(name):
         abort(404)
     return render_template('agent.html', user=user)
 
-@main.route('/edit_profile')
+@main.route('/agent/<int:user_id>')
+@login_required
+def profile(user_id):
+    user = Agent.query.get_or_404(user_id)
+    form = DeleteProfileForm()
+    return render_template('agent.html', user=user, form=form)
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
-    form = EditProfileForm
+    form = EditProfileForm()
+    form.location.choices = [(location.id, location.name) for location in Location.query.all()]
     if form.validate_on_submit():
+        location = Location.query.get(form.location.data)
         current_user.name = form.name.data
-        current_user.location = form.location.data
+        current_user.location = location
         current_user.description = form.description.data
-        db.session.add(agent)
         db.session.commit()
-        return redirect(url_for('.agent', name=current_user.name))
-    form.name.data = current_user.name
-    form.location.data = current_user.location
-    form.description.data = current_user.description
-    return render_template('edit_profile', form=form)
+        return redirect(url_for('main.agent', name=current_user.name))
+    elif request.method == 'GET':
+        form.name.data = current_user.name
+        form.location.data = current_user.location
+        form.description.data = current_user.description
+    return render_template('edit_profile.html', form=form)
+
+
+@main.route('/delete_profile', methods=['POST', 'GET'])
+@login_required
+def delete_profile():
+    form = DeleteProfileForm()
+    if form.validate_on_submit():
+        agent = Agent.query.get_or_404(current_user.id)
+        db.session.delete(agent)
+        db.session.commit()
+        logout_user()
+        flash("Your profile has been deleted")
+        return redirect(url_for('main.index'))
+    return render_template('delete_profile.html', form=form)

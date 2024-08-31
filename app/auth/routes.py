@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, session, request
+import os
+from flask import Blueprint, render_template, redirect, url_for, current_app, flash, session, request
 from app.models import Agent, Location, Role
 from app import db
 from flask_login import login_user, logout_user, current_user
+from werkzeug.utils import secure_filename
 from . import auth
 from app.auth.forms import LoginForm, RegistrationForm
 
@@ -34,12 +36,20 @@ def register():
     if form.validate_on_submit():
         location = Location.query.get(form.location.data)
         role = Role.query.filter_by(default=True).first()
+        image_url = None
+        if form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            form.image.data.save(image_path)
+            image_url = 'uploads/' + filename
+
         user = Agent(email=form.email.data,
                      name=form.name.data,
                      password=form.password.data,
                      location=location,
                      role=role,
-                     description=form.description.data)
+                     description=form.description.data,
+                     image_url=image_url)
         db.session.add(user)
         db.session.commit()
         flash('You can now login')
