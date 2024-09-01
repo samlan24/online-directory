@@ -17,6 +17,7 @@
             <div class="card mt-4">
                 <div class="card-body text-center">
                     <h2>{{ user.name }}</h2>
+                    <img src="{{ 'static', current_user.image_url }}" alt="profile_image">
                     <p><strong>Email:</strong> {{ user.email }}</p>
                     <p><strong>Description:</strong> {{ user.description }}</p>
                     <p><strong>Location:</strong> {{ user.location }}</p>

@@ -18,8 +18,8 @@ class RegistrationForm(FlaskForm):
     name = StringField('name', validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
                                                                                             'Usernames must have only letters, '
                                                                                             'numbers, dots or underscores')])
-    password = PasswordField('Password', validators=[DataRequired(), EqualTo('password2', message='Passwords not matching')])
-    password2 = PasswordField('password2', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(), EqualTo('confirm_password', message='Passwords not matching')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired()])
     location = SelectField('Location', coerce=int)
     image = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     description = TextAreaField('Description', validators=[Length(0, 255)])
