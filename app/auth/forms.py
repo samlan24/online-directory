@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
 from flask_wtf.file import FileAllowed, FileRequired
-from app.models import Agent
+from app.models import Agent, Role
 
 # form to login
 class LoginForm(FlaskForm):
@@ -45,3 +45,31 @@ class EditProfileForm(FlaskForm):
 
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete Account')
+
+
+# admin form
+class AdminForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    name = StringField('Name', validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                                                                            'Usernames must have only letters, '
+                                                                                            'numbers, dots or underscores')])
+    confirmed = BooleanField('Confirmed')
+    role = SelectField('Role', coerce=int)
+    Submit = SubmitField('Register')
+
+
+
+    def __init__(self, user, *args, **kwargs):
+        super(AdminForm, self).__init__(*args, **kwargs)
+        self.role.choices = [(role.id, role.name)
+                             for role in Role.query.order_by(Role.name).all()]
+
+        self.user = user
+
+    def validate_email(self, field):
+        if field.data != self.user.email and Agent.query.filter_by(email=field.data).first():
+            raise ValidationError('Email already registered.')
+
+    def validate_name(self, field):
+        if field.data != self.user.name and Agent.query.filter_by(name=field.data).first():
+            raise ValidationError('Name already in use.')
