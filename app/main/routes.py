@@ -4,6 +4,7 @@ from app.auth.forms import EditProfileForm, DeleteProfileForm, AdminForm
 from flask_login import current_user, login_required, logout_user
 from .decorators import admin_required
 from app import db
+from sqlalchemy import func
 
 """ blueprint for main routes """
 
@@ -14,9 +15,17 @@ def index():
     featured_agents = Agent.query.limit(3).all()
     return render_template('index.html', featured_agents=featured_agents)
 
-@main.route('/find agent')
+
+@main.route('/find_agent', methods=['GET', 'POST'])
 def find_agent():
-    users = Agent.query.all()
+    query = request.args.get('query', '')
+    if query:
+        users = Agent.query.join(Location).filter(
+            (func.lower(Agent.name).like(f'%{query.lower()}%')) |
+            (func.lower(Location.name).like(f'%{query.lower()}%'))
+        ).all()
+    else:
+        users = Agent.query.all()
     return render_template('find_agent.html', users=users)
 
 @main.route('/agent/<int:user_id>')

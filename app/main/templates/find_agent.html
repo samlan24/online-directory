@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Find Agents{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -11,21 +11,37 @@
         </div>
     </div>
 
+    <!-- Search Form -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <form action="{{ url_for('main.find_agent') }}" method="get" class="form-inline">
+                <input type="text" name="query" class="form-control mr-2" placeholder="Search by name or location" value="{{ request.args.get('query', '') }}">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
     <div class="row">
-        {% for user in users %}
-        <div class="col-md-4">
-            <div class="card mt-4">
-                <div class="card-body text-center">
-                    <h2>{{ user.name }}</h2>
-                    <img src="{{ 'static', current_user.image_url }}" alt="profile_image">
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                    <p><strong>Description:</strong> {{ user.description }}</p>
-                    <p><strong>Location:</strong> {{ user.location }}</p>
-                    <a href="{{ url_for('main.agent_detail', user_id=user.id) }}" class="btn btn-primary">More Info</a>
+        {% if users%}
+            {% for user in users %}
+            <div class="col-md-4">
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <h2>{{ user.name }}</h2>
+
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Description:</strong> {{ user.description }}</p>
+                        <p><strong>Location:</strong> {{ user.location }}</p>
+                        <a href="{{ url_for('main.agent_detail', user_id=user.id) }}" class="btn btn-primary">More Info</a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-md-8 text-center">
+            <p>No agents found for your search query.</p>
         </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}
