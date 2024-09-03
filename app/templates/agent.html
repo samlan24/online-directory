@@ -13,6 +13,7 @@ content %}
         <div class="card-body">
           {% if current_user.is_authenticated %}
           <!-- Place the image at the top -->
+          <img src="{{ current_user.image_url }}" alt="Profile Image" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
 
           <!-- Display the user's details below the image -->
           <h2>Hello, {{ current_user.name }}</h2>

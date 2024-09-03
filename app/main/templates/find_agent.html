@@ -15,12 +15,12 @@
     <div class="row justify-content-center mt-4">
         <div class="col-md-8">
             <form action="{{ url_for('main.find_agent') }}" method="get" class="form-inline">
-                <input type="text" name="query" class="form-control mr-2" placeholder="Search by name or location" value="{{ request.args.get('query', '') }}">
-                <button type="submit" class="btn btn-primary">Search</button>
+                <input type="text" name="query" class="form-control mr-2 rounded" placeholder="Search by name or location" value="{{ request.args.get('query', '') }}">
+                <button type="submit" class="btn btn-primary mt-4">Search</button>
             </form>
         </div>
     </div>
-
+    <hr>
     <div class="row">
         {% if users%}
             {% for user in users %}

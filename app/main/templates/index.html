@@ -1,37 +1,96 @@
-{% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<style>
+  html,
+  body {
+    height: 100%;
+  }
+  .full-height {
+    height: 100%;
+  }
+  .card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #e3f2fd;
+  }
+</style>
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1>Welcome to Home Helper Directory</h1>
-            <p>Your one-stop solution for finding real estate agents, movers, and cleaners.</p>
-        </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h1>Welcome to Home Helper Directory</h1>
+      <p class="text-center">
+        Your one-stop solution for finding real estate agents, movers, and
+        cleaners.
+      </p>
     </div>
-
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h2>Featured Agents</h2>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h2>Why Rentnest</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea a dolores
+        optio dolorem velit nam accusamus nihil reiciendis et asperiores?
+      </p>
     </div>
-
-    <div class="row">
-        {% for user in featured_agents %}
-        <div class="col-md-4">
-            <div class="card mt-4">
-                <div class="card-body text-center">
-                    <h2>{{ user.name }}</h2>
-                    <img src="{{ user.image_url }}" alt="">
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                    <p><strong>Description:</strong> {{ user.description }}</p>
-                    <p><strong>Location:</strong> {{ user.location }}</p>
-                    <a href="{{ url_for('main.agent_detail', user_id=user.id) }}" class="btn btn-primary">More Info</a>
-                </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-home fa-3x mb-3"></i>
+          <h2>Reliable Agents</h2>
+          <p>
+            Our agents are verified and reliable, ensuring you get the best
+            service.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-truck fa-3x mb-3"></i>
+                <h2>Efficient Movers</h2>
+                <p>Our movers are efficient and careful, making your move stress-free.</p>
             </div>
         </div>
-        {% endfor %}
     </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-broom fa-3x mb-3"></i>
+                <h2>Professional Cleaners</h2>
+                <p>Our cleaners are professional and thorough, leaving your home spotless.</p>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h2>Featured Agents</h2>
+    </div>
+  </div>
+
+
+  <div class="row">
+    {% for user in featured_agents %}
+    <div class="col-md-4">
+      <div class="card mt-4">
+        <div class="card-body text-center">
+          <h2>{{ user.name }}</h2>
+          <img src="{{ user.image_url }}" alt="" />
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Description:</strong> {{ user.description }}</p>
+          <p><strong>Location:</strong> {{ user.location }}</p>
+          <a
+            href="{{ url_for('main.agent_detail', user_id=user.id) }}"
+            class="btn btn-primary"
+            >More Info</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
