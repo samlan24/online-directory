@@ -16,6 +16,7 @@ class Agent(UserMixin, db.Model):
     description = db.Column(db.String(255))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     image_url = db.Column(db.String(255))
+    is_admin = db.Column(db.Boolean, default=False)
 
 
     # defining default role for new agents
@@ -45,6 +46,9 @@ class Agent(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def is_administrator(self):
+        return self.is_admin
 
 
     @login_manager.user_loader

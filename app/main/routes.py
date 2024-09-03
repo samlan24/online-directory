@@ -86,7 +86,6 @@ def delete_profile():
 
 
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
-@login_required
 @admin_required
 def edit_profile_admin(id):
     user = Agent.query.get_or_404(id)
