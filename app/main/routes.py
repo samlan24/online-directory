@@ -84,22 +84,3 @@ def delete_profile():
         return redirect(url_for('main.index'))
     return render_template('delete_profile.html', form=form)
 
-
-@main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
-@admin_required
-def edit_profile_admin(id):
-    user = Agent.query.get_or_404(id)
-    form = AdminForm(user=user)
-    if form.validate_on_submit():
-        user.email = form.email.data
-        user.name = form.name.data
-        user.confirmed = form.confirmed.data
-        user.role = Role.query.get(form.role.data)
-        db.session.add(user)
-        flash('The profile has been updated.')
-        return redirect(url_for('.user', name=user.name))
-    form.email.data = user.email
-    form.name.data = user.name
-    form.confirmed.data = user.confirmed
-    form.role.data = user.role_id
-    return render_template('edit_profile.html', form=form, user=user)

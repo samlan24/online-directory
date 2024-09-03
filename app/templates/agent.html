@@ -13,11 +13,6 @@ content %}
         <div class="card-body">
           {% if current_user.is_authenticated %}
           <!-- Place the image at the top -->
-          <img
-            src="{{ url_for('static', filename=current_user.image_url) }}"
-            alt="Profile Image"
-            class="img-thumbnail mb-3"
-          />
 
           <!-- Display the user's details below the image -->
           <h2>Hello, {{ current_user.name }}</h2>
@@ -35,14 +30,7 @@ content %}
           </a>
           {% endif %} {% else %}
           <p>Stranger</p>
-          {% endif %} {% if current_user.is_administrator %}
-          <a
-            class="btn btn-danger"
-            href="{{ url_for('.edit_profile_admin', id=user.id) }}"
-          >
-            Edit Profile [Admin]
-          </a>
-          {% endif %}
+
         </div>
       </div>
     </div>

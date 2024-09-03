@@ -16,7 +16,6 @@ class Agent(UserMixin, db.Model):
     description = db.Column(db.String(255))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     image_url = db.Column(db.String(255))
-    is_admin = db.Column(db.Boolean, default=False)
 
 
     # defining default role for new agents
