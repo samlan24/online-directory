@@ -4,6 +4,7 @@ content %}
   <div class="row justify-content-center">
     <div class="col-md-8 text-center">
       <h1>{{ user.name }}</h1>
+      <img src="{{ url_for('static', filename=user.image_url) }}" alt="" class="img-fluid">
       <p><strong>Email:</strong> {{ user.email }}</p>
       <p><strong>Description:</strong> {{ user.description }}</p>
       <p><strong>Location:</strong> {{ user.location }}</p>
