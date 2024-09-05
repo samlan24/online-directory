@@ -1,47 +1,84 @@
-{% extends "base.html" %}
-
-{% block title %}Find Agents{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Find Agents{% endblock %} {% block
+content %}
+<style>
+  .profile_img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+</style>
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1>Welcome to Home Helper Directory</h1>
-            <p>Your one-stop solution for finding real estate agents, movers, and cleaners.</p>
-        </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h1>Welcome to Home Helper Directory</h1>
+      <p>
+        Your one-stop solution for finding real estate agents, movers, and
+        cleaners.
+      </p>
     </div>
+  </div>
 
-    <!-- Search Form -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-8">
-            <form action="{{ url_for('main.find_agent') }}" method="get" class="form-inline">
-                <input type="text" name="query" class="form-control mr-2 rounded" placeholder="Search by name or location" value="{{ request.args.get('query', '') }}">
-                <button type="submit" class="btn btn-primary mt-4">Search</button>
-            </form>
-        </div>
+  <!-- Search Form -->
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <form
+        action="{{ url_for('main.find_agent') }}"
+        method="get"
+        class="form-inline"
+      >
+        <input
+          type="text"
+          name="query"
+          class="form-control mr-2 rounded"
+          placeholder="Search by name or location"
+          value="{{ request.args.get('query', '') }}"
+        />
+        <button type="submit" class="btn btn-primary mt-4">Search</button>
+      </form>
     </div>
-    <hr>
-    <div class="row">
-        {% if users%}
-            {% for user in users %}
-            <div class="col-md-4">
-                <div class="card mt-4">
-                    <div class="card-body text-center">
-                        <h2>{{ user.name }}</h2>
-                        <img src="{{ url_for('static', filename=user.image_url) }}" alt="" class="img-fluid">
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                        <p><strong>Description:</strong> {{ user.description }}</p>
-                        <p><strong>Location:</strong> {{ user.location }}</p>
-                        <a href="{{ url_for('main.agent_detail', user_id=user.id) }}" class="btn btn-primary">More Info</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-        <div class="col-md-8 text-center">
-            <p>No agents found for your search query.</p>
+  </div>
+  <hr />
+  <div class="row">
+    {% if users%} {% for user in users %}
+    <div class="col-md-4">
+      <div class="card mt-4">
+        <div class="card-body text-center">
+          <h2>{{ user.name }}</h2>
+          <img
+            src="{{ url_for('static', filename=user.image_url) }}"
+            alt=""
+            class="img-fluid profile_img"
+          />
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Description:</strong> {{ user.description }}</p>
+          <p><strong>Location:</strong> {{ user.location }}</p>
+          <div
+            class="icons mb-2 d-flex align-items-center justify-content-center"
+          >
+            <a href="https://www.facebook.com" class="text-dark">
+              <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://www.twitter.com" class="text-dark mx-2">
+              <i class="fa-brands fa-twitter"></i>
+            </a>
+            <a href="https://www.linkedin.com" class="text-dark mx-2">
+              <i class="fa-brands fa-linkedin"></i>
+            </a>
+          </div>
+          <a
+            href="{{ url_for('main.agent_detail', user_id=user.id) }}"
+            class="btn btn-primary"
+            >More Info</a
+          >
         </div>
-        {% endif %}
+      </div>
     </div>
+    {% endfor %} {% else %}
+    <div class="col-md-8 text-center">
+      <p>No agents found for your search query.</p>
+    </div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

@@ -8,7 +8,7 @@
   .full-height {
     height: 100vh;
   }
-  .container-fluid{
+  .container-fluid {
     background-image: url("{{ url_for('static', filename='images/pexel.jpg') }}");
     background-size: cover;
     background-position: center;
@@ -17,25 +17,39 @@
     margin-bottom: 50px;
   }
 
-
   .card:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #e3f2fd;
   }
+  .profile_img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 </style>
 <div class="container">
-  <div class="container-fluid full-height d-flex align-items-center justify-content-center mb-12">
-  <div class="row justify-content-center w-100">
-    <div class="content col-md-8 text-center">
-      <h1 style="color: #fff;">Welcome to <span class="bg-warning rounded p-3">Rentnest Directory</span> </h1>
-      <p class="text-center" style="color: #fff;">
-        Your one-stop solution for finding real estate agents, movers, and
-        cleaners.
-      </p>
-      <a class="btn btn-primary rounded-pill" href="{{ url_for('main.find_agent') }} ">Find Agent</a>
+  <div
+    class="container-fluid full-height d-flex align-items-center justify-content-center mb-12"
+  >
+    <div class="row justify-content-center w-100">
+      <div class="content col-md-8 text-center">
+        <h1 style="color: #fff">
+          Welcome to
+          <span class="bg-warning rounded p-3">Rentnest Directory</span>
+        </h1>
+        <p class="text-center" style="color: #fff">
+          Your one-stop solution for finding real estate agents, movers, and
+          cleaners.
+        </p>
+        <a
+          class="btn btn-primary rounded-pill"
+          href="{{ url_for('main.find_agent') }} "
+          >Find Agent</a
+        >
+      </div>
     </div>
   </div>
-</div>
   <div class="row">
     <div class="col-md-12 text-center pb-5">
       <h2>Why Rentnest</h2>
@@ -49,7 +63,7 @@
     <div class="col-md-4">
       <div class="card text-center">
         <div class="card-body">
-          <i class="fas fa-home fa-3x mb-3" style="color: #007bff;"></i>
+          <i class="fas fa-home fa-3x mb-3" style="color: #007bff"></i>
           <h2>Reliable Agents</h2>
           <p>
             Our agents are verified and reliable, ensuring you get the best
@@ -59,22 +73,27 @@
       </div>
     </div>
     <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <i class="fas fa-truck fa-3x mb-3" style="color: #ffc107;"></i>
-                <h2>Efficient Movers</h2>
-                <p>Our movers are efficient and careful, making your move stress-free.</p>
-            </div>
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-truck fa-3x mb-3" style="color: #ffc107"></i>
+          <h2>Efficient Movers</h2>
+          <p>
+            Our movers are efficient and careful, making your move stress-free.
+          </p>
         </div>
+      </div>
     </div>
     <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <i class="fas fa-broom fa-3x mb-3" style="color: #28a745;"></i>
-                <h2>Professional Cleaners</h2>
-                <p>Our cleaners are professional and thorough, leaving your home spotless.</p>
-            </div>
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-broom fa-3x mb-3" style="color: #28a745"></i>
+          <h2>Professional Cleaners</h2>
+          <p>
+            Our cleaners are professional and thorough, leaving your home
+            spotless.
+          </p>
         </div>
+      </div>
     </div>
   </div>
 
@@ -84,17 +103,33 @@
     </div>
   </div>
 
-
   <div class="row">
     {% for user in featured_agents %}
     <div class="col-md-4">
       <div class="card mt-4">
         <div class="card-body text-center">
           <h2>{{ user.name }}</h2>
-          <img src="{{ url_for('static', filename=user.image_url) }}" alt="" class="img-fluid">
+          <img
+            src="{{ url_for('static', filename=user.image_url) }}"
+            alt=""
+            class="img-fluid profile_img"
+          />
           <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Description:</strong> {{ user.description }}</p>
           <p><strong>Location:</strong> {{ user.location }}</p>
+          <div
+            class="icons mb-2 d-flex align-items-center justify-content-center"
+          >
+            <a href="https://www.facebook.com" class="text-dark">
+              <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://www.twitter.com" class="text-dark mx-2">
+              <i class="fa-brands fa-twitter"></i>
+            </a>
+            <a href="https://www.linkedin.com" class="text-dark mx-2">
+              <i class="fa-brands fa-linkedin"></i>
+            </a>
+          </div>
+
           <a
             href="{{ url_for('main.agent_detail', user_id=user.id) }}"
             class="btn btn-primary"

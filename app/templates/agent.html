@@ -13,7 +13,11 @@ content %}
         <div class="card-body">
           {% if current_user.is_authenticated %}
           <!-- Place the image at the top -->
-          <img src="{{ current_user.image_url }}" alt="Profile Image" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+          <img
+            src="{{ url_for('static', filename=user.image_url) }}"
+            alt=""
+            class="img-fluid"
+          />
 
           <!-- Display the user's details below the image -->
           <h2>Hello, {{ current_user.name }}</h2>
@@ -21,7 +25,19 @@ content %}
           <p><strong>Email:</strong> {{ current_user.email }}</p>
           <p><strong>Description:</strong> {{ current_user.description }}</p>
           <p><strong>Location:</strong> {{ current_user.location }}</p>
-
+          <div
+            class="icons mb-2 d-flex align-items-center justify-content-center"
+          >
+            <a href="https://www.facebook.com" class="text-dark">
+              <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://www.twitter.com" class="text-dark mx-2">
+              <i class="fa-brands fa-twitter"></i>
+            </a>
+            <a href="https://www.linkedin.com" class="text-dark mx-2">
+              <i class="fa-brands fa-linkedin"></i>
+            </a>
+          </div>
           {% if user == current_user %}
           <a class="btn btn-primary" href="{{ url_for('.edit_profile') }}">
             Edit Profile
