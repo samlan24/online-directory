@@ -3,6 +3,35 @@
 {% block title %}About Us{% endblock %}
 
 {% block content %}
-<h1>Welcome to Home Helper Directory</h1>
-<p>Your one-stop solution for finding real estate agents, movers, and cleaners.</p>
+<style>
+    .about_heading{
+        background-color: orange;
+    }
+    .about_
+</style>
+<div class="container d-flex flex-column justify-content-center align-items-center">
+    <div class="header_content text-center">
+        <h1>Welcome to Home Helper Directory</h1>
+        <p>Your one-stop solution for finding real estate agents, movers, and cleaners.</p>
+
+    </div>
+    <div class="about_contents mt-5 d-flex flex-row w-100">
+        <div class="about_image border border-1 border-dark flex-grow-1">
+            <img src="{{ url_for('static', filename='images/pexel.jpg') }}" alt="about_image" class="img-fluid">
+        </div>
+        <div class=" bg-light border border-1 border-dark flex-grow-1 p-3">
+            <h1 class="text-center about_heading" style="color: #fff;">About Us</h1>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi adipisci officia laboriosam numquam, fugiat nostrum hic praesentium harum voluptatum ipsum distinctio culpa eum recusandae cum ullam non ipsam debitis eligendi odio dolorem.
+                Mollitia est sed delectus. Quo, ratione exercitationem temporibus tenetur numquam rerum delectus deserunt quod necessitatibus modi totam eius esse?
+                <br>
+                Ullam, sapiente! Odio veniam a aperiam sapiente provident recusandae, natus officiis, quod est minus nihil, inventore accusantium necessitatibus maxime numquam odit laudantium magnam sunt voluptas dolorum culpa iure pariatur?
+                Provident, doloremque mollitia labore dicta a quae fugit ex, molestiae harum sint vero quasi cumque molestias placeat quaerat excepturi. Ab!
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}
