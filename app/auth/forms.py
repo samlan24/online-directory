@@ -35,6 +35,7 @@ class RegistrationForm(FlaskForm):
         if Agent.query.filter_by(name=field.data).first():
             raise ValidationError('name already in use.')
 
+# form to change agent details
 class EditProfileForm(FlaskForm):
     name = StringField('Real name', validators=[Length(0, 64)])
     location = SelectField('Location', coerce=int)
@@ -42,7 +43,7 @@ class EditProfileForm(FlaskForm):
     image = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField('Submit')
 
-
+#form to delete an account
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete Account')
 
