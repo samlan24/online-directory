@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, abort, flash, request, redirect, url_for
 from app.models import Agent, Location, Role
-from app.auth.forms import EditProfileForm, DeleteProfileForm, AdminForm
+from app.auth.forms import EditProfileForm, DeleteProfileForm
 from flask_login import current_user, login_required, logout_user
 from .decorators import admin_required
 from app import db
