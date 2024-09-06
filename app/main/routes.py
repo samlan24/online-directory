@@ -31,7 +31,7 @@ def find_agent():
 @main.route('/agent/<int:user_id>')
 def agent_detail(user_id):
     user = Agent.query.get_or_404(user_id)
-    return render_template('agent_details.html', user=user)
+    return render_template('agent.html', user=user)
 
 @main.route('/about')
 def about():
@@ -54,7 +54,7 @@ def agent(name):
         abort(404)
     return render_template('agent.html', user=user)
 
-@main.route('/agent/<int:user_id>')
+@main.route('/agent/<name>')
 @login_required
 def profile(user_id):
     user = Agent.query.get_or_404(user_id)
