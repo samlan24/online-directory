@@ -4,6 +4,7 @@ from flask_login import UserMixin, login_required
 from flask import current_app
 from . import login_manager
 from datetime import datetime
+
 # Agent model
 class Agent(UserMixin, db.Model):
     __tablename__ = 'agents'
@@ -12,12 +13,12 @@ class Agent(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    appointments = db.relationship('Appointment', backref='agent', lazy=True)
     password_hash = db.Column(db.String(255))
     description = db.Column(db.String(255))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     image_url = db.Column(db.String(255))
     phone = db.Column(db.String(15))
+    appointments = db.relationship('Appointment', backref='agent', lazy=True)
 
 
     # defining default role for new agents
@@ -102,6 +103,7 @@ class Permission:
 
 # appointments model
 class Appointment(db.Model):
+    __tablename__ = 'appointments'
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(64), nullable=False)
     user_email = db.Column(db.String(120), nullable=False)

@@ -29,18 +29,16 @@ def find_agent():
     return render_template('find_agent.html', users=users)
 
 
-@main.route('/agent/<int:user_id>', methods=['GET', 'POST'])
-def agent_detail(user_id):
-    user = Agent.query.get_or_404(user_id)
+@main.route('/agent/<name>', methods=['GET', 'POST'])
+def agent_detail(name):
+    user = Agent.query.filter_by(name=name).first()
+    if user is None:
+        abort(404)
+
     form = AppointmentForm()
 
-    if form.is_submitted():
-        print(f"Form submitted: {form.data}")
-    if form.errors:
-        print(f"Form errors: {form.errors}")
-
-    # Handle form submission (for POST request)
     if form.validate_on_submit():
+        # Create new appointment
         appointment = Appointment(
             user_name=form.user_name.data,
             user_email=form.user_email.data,
@@ -49,11 +47,10 @@ def agent_detail(user_id):
         )
         db.session.add(appointment)
         db.session.commit()
-        flash('Your appointment has been booked!', 'success')
-        return redirect(url_for('main.agent_detail', user_id=user.id))  # Redirect back to the agent details page
+        flash('Your appointment has been booked successfully!', 'success')
+        return redirect(url_for('main.agent_details', name=user.name))
 
-    # Render the agent detail template with the form (for GET request)
-    return render_template('agent_details.html', user=user, form=form)
+    return render_template('agent.html', user=user, form=form)
 
 
 @main.route('/about')
@@ -76,7 +73,14 @@ def agent(name):
     user = Agent.query.filter_by(name=name).first()
     if user is None:
         abort(404)
-    return render_template('agent.html', user=user)
+    return render_template('agent_details.html', user=user)
+
+@main.route('/agent/<name>')
+def agent_details(name):
+    user = Agent.query.filter_by(name=name).first()
+    if user is None:
+        abort(404)
+    return render_template('agent_details.html', user=user)
 
 
 
