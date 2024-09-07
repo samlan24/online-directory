@@ -7,16 +7,16 @@ content %}
 
     </div>
     <div class="contact_form d-flex justify-content-center align-items-center">
-        <form action="/submit_contact" method="post" class="mt-4">
+        <form action="/submit_contact" method="post" class="mt-4 p-4 rounded" style="background-color: aqua;">
             <div class="mb-3">
               <label for="name" class="form-label">Name</label>
-              <input type="text" class="form-control" id="name" name="name" required />
+              <input type="text" class="form-control rounded-pill id="name" name="name" required />
             </div>
             <div class="mb-3">
               <label for="company" class="form-label">Company Name</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control rounded-pill"
                 id="company"
                 name="company"
                 required
@@ -26,7 +26,7 @@ content %}
               <label for="email" class="form-label">Email</label>
               <input
                 type="email"
-                class="form-control"
+                class="form-control rounded-pill"
                 id="email"
                 name="email"
                 required
@@ -42,7 +42,7 @@ content %}
                 required
               ></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary rounded-pill">Submit</button>
           </form>
     </div>
 
