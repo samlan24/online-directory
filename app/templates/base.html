@@ -66,7 +66,7 @@
             <ul class="navbar-nav">
               {% if current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('main.agent_detail', user_id=current_user.id) }}">Profile</a>
+                <a class="nav-link" href="{{ url_for('main.agent', name=current_user.name) }}">Profile</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.logout') }}">Sign Out</a>

@@ -71,6 +71,15 @@ def search():
     return render_template('search.html')
 
 
+@main.route('/agent/<name>')
+def agent(name):
+    user = Agent.query.filter_by(name=name).first()
+    if user is None:
+        abort(404)
+    return render_template('agent.html', user=user)
+
+
+
 @main.route('/agent_profile/<int:user_id>')
 @login_required
 def profile(user_id):
