@@ -40,7 +40,7 @@ class EditProfileForm(FlaskForm):
     name = StringField('Real name', validators=[Length(0, 64)])
     location = SelectField('Location', coerce=int)
     description = TextAreaField('About me')
-    image = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
+    image = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Submit')
 
 #form to delete an account

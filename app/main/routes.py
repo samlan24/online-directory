@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, abort, flash, request, redirect, url_for
+import os
+from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
 from app.models import Agent, Location, Role
+from werkzeug.utils import secure_filename
 from app.auth.forms import EditProfileForm, DeleteProfileForm
 from flask_login import current_user, login_required, logout_user
 from .decorators import admin_required
@@ -31,7 +33,7 @@ def find_agent():
 @main.route('/agent/<int:user_id>')
 def agent_detail(user_id):
     user = Agent.query.get_or_404(user_id)
-    return render_template('agent.html', user=user)
+    return render_template('agent_details.html', user=user)
 
 @main.route('/about')
 def about():
@@ -71,6 +73,13 @@ def edit_profile():
         current_user.name = form.name.data
         current_user.location = location
         current_user.description = form.description.data
+
+        if form.image.data:
+            filename = secure_filename(form.image.data.filename)
+            image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            form.image.data.save(image_path)
+            current_user.image_url = 'uploads/' + filename
+
         db.session.commit()
         return redirect(url_for('main.agent', name=current_user.name))
     elif request.method == 'GET':
