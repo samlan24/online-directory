@@ -1,15 +1,13 @@
 import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
-from app.models import Agent, Location, Role
+from app.models import Agent, Location, Appointment
 from werkzeug.utils import secure_filename
-from app.auth.forms import EditProfileForm, DeleteProfileForm
+from app.auth.forms import EditProfileForm, DeleteProfileForm, AppointmentForm
 from flask_login import current_user, login_required, logout_user
-from .decorators import admin_required
-from app import db
 from sqlalchemy import func
+from app import db
 
-""" blueprint for main routes """
-
+""" Blueprint for main routes """
 main = Blueprint('main', __name__, template_folder='templates', static_folder='static')
 
 @main.route('/')
@@ -30,10 +28,33 @@ def find_agent():
         users = Agent.query.all()
     return render_template('find_agent.html', users=users)
 
-@main.route('/agent/<int:user_id>')
+
+@main.route('/agent/<int:user_id>', methods=['GET', 'POST'])
 def agent_detail(user_id):
     user = Agent.query.get_or_404(user_id)
-    return render_template('agent_details.html', user=user)
+    form = AppointmentForm()
+
+    if form.is_submitted():
+        print(f"Form submitted: {form.data}")
+    if form.errors:
+        print(f"Form errors: {form.errors}")
+
+    # Handle form submission (for POST request)
+    if form.validate_on_submit():
+        appointment = Appointment(
+            user_name=form.user_name.data,
+            user_email=form.user_email.data,
+            date=form.date.data,
+            agent_id=user.id
+        )
+        db.session.add(appointment)
+        db.session.commit()
+        flash('Your appointment has been booked!', 'success')
+        return redirect(url_for('main.agent_detail', user_id=user.id))  # Redirect back to the agent details page
+
+    # Render the agent detail template with the form (for GET request)
+    return render_template('agent_details.html', user=user, form=form)
+
 
 @main.route('/about')
 def about():
@@ -49,19 +70,14 @@ def contact():
 def search():
     return render_template('search.html')
 
-@main.route('/agent/<name>')
-def agent(name):
-    user = Agent.query.filter_by(name=name).first()
-    if user is None:
-        abort(404)
-    return render_template('agent.html', user=user)
 
-@main.route('/agent/<int:user_id>')
+@main.route('/agent_profile/<int:user_id>')
 @login_required
 def profile(user_id):
     user = Agent.query.get_or_404(user_id)
     form = DeleteProfileForm()
     return render_template('agent.html', user=user, form=form)
+
 
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -102,3 +118,12 @@ def delete_profile():
         return redirect(url_for('main.index'))
     return render_template('delete_profile.html', form=form)
 
+
+@main.route('/appointments')
+@login_required
+def appointments():
+    if not current_user.is_authenticated:
+        flash('Please log in to access this page.', 'danger')
+        return redirect(url_for('auth.login'))
+    appointments = Appointment.query.filter_by(agent_id=current_user.id).all()
+    return render_template('appointments.html', appointments=appointments)

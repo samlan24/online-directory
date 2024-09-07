@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, FileField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, FileField, DateTimeField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from wtforms import ValidationError
 from flask_wtf.file import FileAllowed, FileRequired
@@ -46,3 +46,10 @@ class EditProfileForm(FlaskForm):
 #form to delete an account
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete Account')
+
+#appoinment form
+class AppointmentForm(FlaskForm):
+    user_name = StringField('Your Name', validators=[DataRequired()])
+    user_email = StringField('Your Email', validators=[DataRequired(), Email()])
+    date = DateTimeField('Appointment Date', format='%Y-%m-%d %H:%M:%S', validators=[DataRequired()])
+    submit = SubmitField('Book Appointment')
