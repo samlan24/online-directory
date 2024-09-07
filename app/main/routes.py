@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
 from app.models import Agent, Location, Appointment
 from werkzeug.utils import secure_filename
-from app.auth.forms import EditProfileForm, DeleteProfileForm, AppointmentForm
+from app.auth.forms import EditProfileForm, DeleteProfileForm
 from flask_login import current_user, login_required, logout_user
 from sqlalchemy import func
 from app import db
@@ -29,30 +29,6 @@ def find_agent():
     return render_template('find_agent.html', users=users)
 
 
-@main.route('/agent/<name>', methods=['GET', 'POST'])
-def agent_detail(name):
-    user = Agent.query.filter_by(name=name).first()
-    if user is None:
-        abort(404)
-
-    form = AppointmentForm()
-
-    if form.validate_on_submit():
-        # Create new appointment
-        appointment = Appointment(
-            user_name=form.user_name.data,
-            user_email=form.user_email.data,
-            date=form.date.data,
-            agent_id=user.id
-        )
-        db.session.add(appointment)
-        db.session.commit()
-        flash('Your appointment has been booked successfully!', 'success')
-        return redirect(url_for('main.agent_details', name=user.name))
-
-    return render_template('agent.html', user=user, form=form)
-
-
 @main.route('/about')
 def about():
     return render_template('about.html')
@@ -75,12 +51,12 @@ def agent(name):
         abort(404)
     return render_template('agent_details.html', user=user)
 
-@main.route('/agent/<name>')
+@main.route('/agent_details/<name>')
 def agent_details(name):
     user = Agent.query.filter_by(name=name).first()
     if user is None:
         abort(404)
-    return render_template('agent_details.html', user=user)
+    return render_template('agent.html', user=user)
 
 
 
