@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
-from app.models import Agent, Location
+from app.models import Agent, Location, Message
 from werkzeug.utils import secure_filename
-from app.auth.forms import EditProfileForm, DeleteProfileForm
+from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm
 from flask_login import current_user, login_required, logout_user
 from sqlalchemy import func
 from app import db

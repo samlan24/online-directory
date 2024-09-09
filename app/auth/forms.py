@@ -47,9 +47,8 @@ class EditProfileForm(FlaskForm):
 class DeleteProfileForm(FlaskForm):
     submit = SubmitField('Delete Account')
 
-#appoinment form
-class AppointmentForm(FlaskForm):
-    user_name = StringField('Your Name', validators=[DataRequired()])
-    user_email = StringField('Your Email', validators=[DataRequired(), Email()])
-    date = DateTimeField('Appointment Date', format='%Y-%m-%d %H:%M:%S', validators=[DataRequired()])
-    submit = SubmitField('Book Appointment')
+# form to send message
+class MessageForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    body = TextAreaField('Message', validators=[DataRequired()])
+    submit = SubmitField('Send')

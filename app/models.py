@@ -98,3 +98,16 @@ class Role(db.Model):
 class Permission:
     Administer = 0x80
     AddService = 0x01
+
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    agent_id = db.Column(db.Integer, db.ForeignKey('agent.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    agent = db.relationship('Agent', backref=db.backref('received_messages', lazy=True))
+
+    def __repr__(self):
+        return f'<Message {self.name}, {self.email}>'
