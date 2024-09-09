@@ -44,12 +44,23 @@ def search():
     return render_template('search.html')
 
 
-@main.route('/agent/<name>')
+@main.route('/agent/<name>', methods=['GET', 'POST'])
 def agent(name):
     user = Agent.query.filter_by(name=name).first()
     if user is None:
         abort(404)
-    return render_template('agent_details.html', user=user)
+    form = MessageForm()
+    if form.validate_on_submit():
+        message = Message(
+            email=form.email.data,
+            agent_id=user.id,
+            content=form.content.data
+        )
+        db.session.add(message)
+        db.session.commit()
+        flash('Your message has been sent successfully!', 'success')
+        return redirect(url_for('main.agent_details', name=user.name))
+    return render_template('agent_details.html', user=user, form=form)
 
 @main.route('/agent_details/<name>')
 def agent_details(name):

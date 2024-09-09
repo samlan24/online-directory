@@ -24,6 +24,22 @@ content %}
           <i class="fa-brands fa-linkedin"></i>
         </a>
       </div>
+      <h3>Send a Message</h3>
+      <form
+        method="POST"
+        action="{{ url_for('main.agent_details', name=user.name) }}"
+      >
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.email.label(class="form-label") }} {{
+          form.email(class="form-control") }}
+        </div>
+        <div class="form-group">
+          {{ form.content.label(class="form-label") }} {{
+          form.content(class="form-control") }}
+        </div>
+        <div class="form-group">{{ form.submit(class="btn btn-primary") }}</div>
+      </form>
     </div>
   </div>
 </div>
