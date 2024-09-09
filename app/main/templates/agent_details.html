@@ -27,7 +27,7 @@ content %}
       <h3>Send a Message</h3>
       <form
         method="POST"
-        action="{{ url_for('main.agent_details', name=user.name) }}"
+        action="{{ url_for('main.agent', name=user.name) }}"
       >
         {{ form.hidden_tag() }}
         <div class="form-group">

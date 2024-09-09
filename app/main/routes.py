@@ -70,6 +70,16 @@ def agent_details(name):
     return render_template('agent.html', user=user)
 
 
+@main.route('/agent/<name>/messages')
+@login_required
+def agent_messages(name):
+    user = Agent.query.filter_by(name=name).first()
+    if user is None or user != current_user:
+        abort(404)
+    messages = Message.query.filter_by(agent_id=user.id).order_by(Message.timestamp.desc()).all()
+    return render_template('agent_messages.html', user=user, messages=messages)
+
+
 
 @main.route('/agent_profile/<int:user_id>')
 @login_required

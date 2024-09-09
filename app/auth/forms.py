@@ -50,5 +50,5 @@ class DeleteProfileForm(FlaskForm):
 # form to send message
 class MessageForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    body = TextAreaField('Message', validators=[DataRequired()])
+    content = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send')

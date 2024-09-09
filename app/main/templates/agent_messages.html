@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1>Messages for {{ user.name }}</h1>
+      {% if messages %}
+      <ul class="list-group">
+        {% for message in messages %}
+        <li class="list-group-item">
+          <p><strong>From:</strong> {{ message.email }}</p>
+          <p><strong>Message:</strong> {{ message.content }}</p>
+          <p><small><strong>Sent at:</strong> {{ message.timestamp }}</small></p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No messages found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
