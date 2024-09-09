@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
 from app.models import Agent, Location, Message
 from werkzeug.utils import secure_filename
-from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm
+from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm, DeleteMessageForm
 from flask_login import current_user, login_required, logout_user
 from sqlalchemy import func
 from app import db
@@ -92,6 +92,19 @@ def agent_messages(name):
         abort(404)
     messages = Message.query.filter_by(agent_id=user.id).order_by(Message.timestamp.desc()).all()
     return render_template('agent_messages.html', user=user, messages=messages)
+
+# deleting messages route
+@main.route('/delete_message/<int:message_id>', methods=['POST'])
+@login_required
+def delete_message(message_id):
+    message = Message.query.get_or_404(message_id)
+    agent = Agent.query.get_or_404(message.agent_id)
+    if agent != current_user:
+        abort(403)
+    db.session.delete(message)
+    db.session.commit()
+    flash('Message deleted successfully.', 'success')
+    return redirect(url_for('main.agent_messages', name=agent.name))
 
 
 # agent delete profile route

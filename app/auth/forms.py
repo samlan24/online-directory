@@ -52,3 +52,7 @@ class MessageForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     content = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send')
+
+
+class DeleteMessageForm(FlaskForm):
+    submit = SubmitField('Delete')
