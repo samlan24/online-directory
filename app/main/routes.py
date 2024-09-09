@@ -10,12 +10,14 @@ from app import db
 """ Blueprint for main routes """
 main = Blueprint('main', __name__, template_folder='templates', static_folder='static')
 
+
+# main route
 @main.route('/')
 def index():
     featured_agents = Agent.query.limit(3).all()
     return render_template('index.html', featured_agents=featured_agents)
 
-
+# find agent route
 @main.route('/find_agent', methods=['GET', 'POST'])
 def find_agent():
     query = request.args.get('query', '')
@@ -28,22 +30,30 @@ def find_agent():
         users = Agent.query.all()
     return render_template('find_agent.html', users=users)
 
-
+# about route
 @main.route('/about')
 def about():
     return render_template('about.html')
 
-
+# contact route
 @main.route('/contact')
 def contact():
     return render_template('contact.html')
 
-
+# search route
 @main.route('/search')
 def search():
     return render_template('search.html')
 
+# route to view public agent profile
+@main.route('/public_agent_profile/<name>')
+def public_agent_profile(name):
+    user = Agent.query.filter_by(name=name).first()
+    if user is None:
+        abort(404)
+    return render_template('public_agent_profile.html', user=user)
 
+# agent route
 @main.route('/agent/<name>', methods=['GET', 'POST'])
 def agent(name):
     user = Agent.query.filter_by(name=name).first()
@@ -59,10 +69,13 @@ def agent(name):
         db.session.add(message)
         db.session.commit()
         flash('Your message has been sent successfully!', 'success')
-        return redirect(url_for('main.agent_details', name=user.name))
+        return redirect(url_for('main.public_agent_profile', name=user.name))
     return render_template('agent_details.html', user=user, form=form)
 
+
+# agent details route
 @main.route('/agent_details/<name>')
+@login_required
 def agent_details(name):
     user = Agent.query.filter_by(name=name).first()
     if user is None:
@@ -70,6 +83,7 @@ def agent_details(name):
     return render_template('agent.html', user=user)
 
 
+# agent messages route
 @main.route('/agent/<name>/messages')
 @login_required
 def agent_messages(name):
@@ -80,7 +94,7 @@ def agent_messages(name):
     return render_template('agent_messages.html', user=user, messages=messages)
 
 
-
+# agent delete profile route
 @main.route('/agent_profile/<int:user_id>')
 @login_required
 def profile(user_id):
@@ -89,6 +103,7 @@ def profile(user_id):
     return render_template('agent.html', user=user, form=form)
 
 
+# edit profile route
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -114,7 +129,7 @@ def edit_profile():
         form.description.data = current_user.description
     return render_template('edit_profile.html', form=form)
 
-
+# delete profile route
 @main.route('/delete_profile', methods=['POST', 'GET'])
 @login_required
 def delete_profile():
