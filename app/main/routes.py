@@ -135,7 +135,7 @@ def edit_profile():
             current_user.image_url = 'uploads/' + filename
 
         db.session.commit()
-        return redirect(url_for('main.agent', name=current_user.name))
+        return redirect(url_for('main.agent_details', name=current_user.name))
     elif request.method == 'GET':
         form.name.data = current_user.name
         form.location.data = current_user.location

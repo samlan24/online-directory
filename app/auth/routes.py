@@ -15,7 +15,7 @@ def login():
         user = Agent.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            return redirect(request.args.get('next') or url_for('main.agent', name=user.name))
+            return redirect(request.args.get('next') or url_for('main.agent_details', name=user.name))
         flash('invalid username or password')
     return render_template('login.html', form=form)
 
