@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
-from app.models import Agent, Location, Appointment
+from app.models import Agent, Location
 from werkzeug.utils import secure_filename
-from app.auth.forms import EditProfileForm, DeleteProfileForm, AppointmentForm
+from app.auth.forms import EditProfileForm, DeleteProfileForm
 from flask_login import current_user, login_required, logout_user
 from sqlalchemy import func
 from app import db
@@ -106,13 +106,3 @@ def delete_profile():
         flash("Your profile has been deleted")
         return redirect(url_for('main.index'))
     return render_template('delete_profile.html', form=form)
-
-
-@main.route('/appointments')
-@login_required
-def appointments():
-    if not current_user.is_authenticated:
-        flash('Please log in to access this page.', 'danger')
-        return redirect(url_for('auth.login'))
-    appointments = Appointment.query.filter_by(agent_id=current_user.id).all()
-    return render_template('appointments.html', appointments=appointments)
