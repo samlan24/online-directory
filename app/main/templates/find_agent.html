@@ -1,5 +1,7 @@
-{% extends "base.html" %} {% block title %}Find Agents{% endblock %} {% block
-content %}
+{% extends "base.html" %}
+{% block title %}Find Agents{% endblock %}
+{% block content %}
+
 <style>
   .profile_img {
     width: 150px;
@@ -7,26 +9,41 @@ content %}
     border-radius: 50%;
     object-fit: cover;
   }
+
+  .filter-sidebar {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+  }
+
+  .filter-sidebar h3 {
+    margin-bottom: 20px;
+  }
+
+  .filter-sidebar label {
+    font-weight: bold;
+  }
+
+  .filter-sidebar input,
+  .filter-sidebar select {
+    width: 100%;
+    margin-bottom: 15px;
+  }
 </style>
+
 <div class="container">
+  <!-- Search Bar Section -->
   <div class="row justify-content-center">
     <div class="col-md-8 text-center">
       <h1>Welcome to Home Helper Directory</h1>
-      <p>
-        Your one-stop solution for finding real estate agents, movers, and
-        cleaners.
-      </p>
+      <p>Your one-stop solution for finding real estate agents, movers, and cleaners.</p>
     </div>
   </div>
 
-  <!-- Search Form -->
+  <!-- Search Form at the top -->
   <div class="row justify-content-center mt-4">
     <div class="col-md-8">
-      <form
-        action="{{ url_for('main.find_agent') }}"
-        method="get"
-        class="form-inline"
-      >
+      <form action="{{ url_for('main.find_agent') }}" method="get" class="form-inline">
         <input
           type="text"
           name="query"
@@ -38,46 +55,93 @@ content %}
       </form>
     </div>
   </div>
+
   <hr />
+
   <div class="row">
-    {% if users%} {% for user in users %}
-    <div class="col-md-4">
-      <div class="card mt-4">
-        <div class="card-body text-center">
-          <h2>{{ user.name }}</h2>
-          <img
-            src="{{ url_for('static', filename=user.image_url) }}"
-            alt=""
-            class="img-fluid profile_img"
-          />
-          <p><strong>Description:</strong> {{ user.description }}</p>
-          <p><strong>Location:</strong> {{ user.location }}</p>
-          <div
-            class="icons mb-2 d-flex align-items-center justify-content-center"
-          >
-            <a href="https://www.facebook.com" class="text-dark">
-              <i class="fab fa-facebook"></i>
-            </a>
-            <a href="https://www.twitter.com" class="text-dark mx-2">
-              <i class="fa-brands fa-twitter"></i>
-            </a>
-            <a href="https://www.linkedin.com" class="text-dark mx-2">
-              <i class="fa-brands fa-linkedin"></i>
-            </a>
+    <!-- Sidebar for Filters -->
+    <div class="col-md-3">
+      <div class="filter-sidebar">
+        <h3>Filter Agents</h3>
+        <form action="{{ url_for('main.find_agent') }}" method="get">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Search by name" value="{{ request.args.get('name', '') }}">
           </div>
-          <a
-            href="{{ url_for('main.agent', name=user.name) }}"
-            class="btn btn-primary"
-            >More Info</a
-          >
-        </div>
+
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" name="location" class="form-control" placeholder="Search by location" value="{{ request.args.get('location', '') }}">
+          </div>
+
+          <div class="form-group">
+            <label for="rating">Minimum Rating</label>
+            <select name="rating" class="form-control">
+              <option value="">Select rating</option>
+              <option value="1" {% if request.args.get('rating') == '1' %}selected{% endif %}>1 Star</option>
+              <option value="2" {% if request.args.get('rating') == '2' %}selected{% endif %}>2 Stars</option>
+              <option value="3" {% if request.args.get('rating') == '3' %}selected{% endif %}>3 Stars</option>
+              <option value="4" {% if request.args.get('rating') == '4' %}selected{% endif %}>4 Stars</option>
+              <option value="5" {% if request.args.get('rating') == '5' %}selected{% endif %}>5 Stars</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary mt-3 w-100">Apply Filters</button>
+        </form>
       </div>
     </div>
-    {% endfor %} {% else %}
-    <div class="col-md-8 text-center">
-      <p>No agents found for your search query.</p>
+
+    <!-- Agent Listings -->
+    <div class="col-md-9">
+      <div class="row">
+        {% if users %}
+        {% for user in users %}
+        <div class="col-md-4">
+          <div class="card mt-4">
+            <div class="card-body text-center">
+              <h2>{{ user.name }}</h2>
+              <img
+                src="{{ url_for('static', filename=user.image_url) }}"
+                alt=""
+                class="img-fluid profile_img"
+              />
+              <p><strong>Location:</strong> {{ user.location }}</p>
+              <p>
+                Average Rating: {% if user.average_rating() %}
+                <span>
+                  {% for i in range(1, 6) %}
+                  <i class="fa fa-star{% if i > user.average_rating() %}-o{% endif %}" aria-hidden="true"></i>
+                  {% endfor %}
+                </span>
+                ({{ user.average_rating() }})
+                {% else %}
+                No ratings yet
+                {% endif %}
+              </p>
+              <div class="icons mb-2 d-flex align-items-center justify-content-center">
+                <a href="https://www.facebook.com" class="text-dark">
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://www.twitter.com" class="text-dark mx-2">
+                  <i class="fa-brands fa-twitter"></i>
+                </a>
+                <a href="https://www.linkedin.com" class="text-dark mx-2">
+                  <i class="fa-brands fa-linkedin"></i>
+                </a>
+              </div>
+              <a href="{{ url_for('main.agent', name=user.name) }}" class="btn btn-primary">More Info</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-md-8 text-center">
+          <p>No agents found for your search query.</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
-    {% endif %}
   </div>
 </div>
+
 {% endblock %}

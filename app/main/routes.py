@@ -21,14 +21,45 @@ def index():
 @main.route('/find_agent', methods=['GET', 'POST'])
 def find_agent():
     query = request.args.get('query', '')
+
+
+    name_query = request.args.get('name', '')
+    location_query = request.args.get('location', '')
+    rating_query = request.args.get('rating', '')
+
+
+    query_result = Agent.query.join(Location)
+
+
     if query:
-        users = Agent.query.join(Location).filter(
+        query_result = query_result.filter(
             (func.lower(Agent.name).like(f'%{query.lower()}%')) |
             (func.lower(Location.name).like(f'%{query.lower()}%'))
-        ).all()
-    else:
-        users = Agent.query.all()
+        )
+
+    # Apply filters if they are provided
+    if name_query:
+        query_result = query_result.filter(func.lower(Agent.name).like(f'%{name_query.lower()}%'))
+
+    if location_query:
+        query_result = query_result.filter(func.lower(Location.name).like(f'%{location_query.lower()}%'))
+
+    if rating_query:
+        rating_value = float(rating_query)
+        query_result = query_result.filter(
+            Agent.id.in_(
+                db.session.query(Rating.agent_id)
+                .group_by(Rating.agent_id)
+                .having(func.avg(Rating.value) >= rating_value)
+            )
+        )
+
+    # Final result after applying search and filters
+    users = query_result.all()
+
     return render_template('find_agent.html', users=users)
+
+
 
 # about route
 @main.route('/about')
