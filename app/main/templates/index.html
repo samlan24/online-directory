@@ -5,9 +5,6 @@
   body {
     height: 100%;
   }
-  .full-height {
-    height: 100vh;
-  }
   .container-fluid {
     background-image: url("{{ url_for('static', filename='images/pexel.jpg') }}");
     background-size: cover;
@@ -21,17 +18,23 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #e3f2fd;
   }
+  .small-dash {
+    width: 50px;
+    border: 1px solid #0684df;
+    margin: 10px auto;
+  }
   .profile_img {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
   }
+  .services{
+  background-color: #f8f9fa;
+  }
 </style>
 <div class="container">
-  <div
-    class="container-fluid full-height d-flex align-items-center justify-content-center mb-12"
-  >
+  <div class="container-fluid d-flex align-items-center justify-content-center mb-12 vh-100">
     <div class="row justify-content-center w-100">
       <div class="content col-md-8 text-center">
         <h1 style="color: #fff">
@@ -53,53 +56,70 @@
   <div class="row">
     <div class="col-md-12 text-center pb-5">
       <h2>Why Rentnest</h2>
+      <hr class="small-dash">
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea a dolores
-        optio dolorem velit nam accusamus nihil reiciendis et asperiores?
+        Why Rentnest? Trusted Agents, Seamless Bookings, and Stress-Free Solutions for Your Real Estate Needs.
       </p>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-4">
-      <div class="card text-center">
-        <div class="card-body">
-          <i class="fas fa-home fa-3x mb-3" style="color: #007bff"></i>
+  <div class="flex d-flex-column services">
+
+      <div class="text-center flex d-flex flex-row mt-5">
+        <div class="card_image col-6">
+          <img src="{{ url_for('static', filename='images/hpuse3.jpg') }}" alt="house" class="img-fluid rounded">
+        </div>
+
+        <div class="card-body col-6">
+
           <h2>Reliable Agents</h2>
-          <p>
-            Our agents are verified and reliable, ensuring you get the best
-            service.
+          <p class="text-start p-5">
+            Finding trustworthy agents can be a challenge, but we make it easy.<br>
+            Our platform connects you with top-rated professionals who are committed to delivering exceptional service.<br>
+            Every agent undergoes a thorough vetting process, ensuring they meet our high standards of reliability and expertise.<br>
           </p>
         </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card text-center">
-        <div class="card-body">
-          <i class="fas fa-truck fa-3x mb-3" style="color: #ffc107"></i>
+
+
+      <div class="text-center flex d-flex flex-row mt-5">
+        <div class="card-body col-6">
           <h2>Efficient Movers</h2>
-          <p>
-            Our movers are efficient and careful, making your move stress-free.
+          <p class="text-start p-5">
+            When it comes to moving, efficiency is key.
+            Our movers are trained to handle your belongings with care while ensuring a smooth and timely transition to your new home.
+            From packing to unloading, we prioritize speed and safety to give you peace of mind. <br>
           </p>
         </div>
+        <div class="card_image col-6" >
+          <img src="{{ url_for('static', filename='images/house2.jpg') }}" alt="house" class="img-fluid rounded">
+        </div>
       </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card text-center">
-        <div class="card-body">
-          <i class="fas fa-broom fa-3x mb-3" style="color: #28a745"></i>
+
+
+      <div class="text-center flex d-flex flex-row mt-5">
+        <div class="card_image col-6">
+          <img src="{{ url_for('static', filename='images/house.jpg') }}" alt="house" class="img-fluid rounded">
+        </div>
+        <div class="card-body col-6">
           <h2>Professional Cleaners</h2>
-          <p>
-            Our cleaners are professional and thorough, leaving your home
-            spotless.
+          <p class="text-start p-5">
+            A clean space is essential for your well-being, and our professional cleaners are here to make it effortless.
+            With attention to detail and a commitment to excellence, we ensure your home or office shines from top to bottom.
+            Our team uses eco-friendly products and proven techniques to deliver spotless results every time. <br>
+
           </p>
         </div>
       </div>
-    </div>
+
   </div>
 
   <div class="row mt-5">
     <div class="col-md-12 text-center">
       <h2>Featured Agents</h2>
+      <hr class="small-dash">
+      <p>
+        Meet Our Featured Agents: Top-Rated Professionals Dedicated to Helping You Find Your Perfect Home.
+      </p>
     </div>
   </div>
 
