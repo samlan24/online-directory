@@ -22,6 +22,13 @@
 ## Set Instructions
 
 1. Clone the Repository
-`git clone https://github.com/your-username/home-helper-directory.git
-cd home-helper-directory
+
+`git clone https://github.com/your-username/online-directory.git
+cd home-online-directory
+`
+2. Set Up a Virtual Environment
+Before installing the dependencies, it’s recommended to create a virtual environment:
+`
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 `
