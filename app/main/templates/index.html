@@ -160,6 +160,40 @@
     </div>
     {% endfor %}
   </div>
+
+  <div class="container mt-5">
+    <h2 class="text-center">Latest Blogs</h2>
+    <hr class="small-dash">
+    <p class="text-center">Tips to keep your house clean, safe, and practical</p>
+    <div class="flex d-flex flex-column bg-light mt-5">
+
+        <div class="mb-4 flex d-flex flex-row">
+          <div class="image col-6">
+            <img src="{{ url_for('static', filename='images/home.jpg') }}" class="img-fluid rounded" alt="Blog 1">
+          </div>
+          <div class="card-body col-6" >
+            <h3 class="card-title">Kitchen Organization</h3>
+            <span> <b>Written by:</b> Admin</span>
+            <p class="card-text">A brief description of the first blog. This is a summary of the content to entice readers to click through and read more.</p>
+            <a href="#" class="btn btn-primary">Read More</a>
+          </div>
+        </div>
+
+
+        <div class="mb-4 flex d-flex flex-row">
+          <div class="image col-6">
+            <img src="{{ url_for('static', filename='images/home2.jpg') }}" class="img-fluid rounded" alt="Blog 1">
+          </div>
+          <div class="card-body col-6 ">
+            <h3 class="card-title">Pet-Friendly Spaces</h3>
+            <span> <b>Written by:</b> Admin</span>
+            <p class="card-text">A brief description of the first blog. This is a summary of the content to entice readers to click through and read more.</p>
+            <a href="#" class="btn btn-primary">Read More</a>
+          </div>
+        </div>
+
+    </div>
+  </div>
   <h2 class="text-center mt-3">Need Help?</h2>
   <div class="contact_form d-flex justify-content-center align-items-center">
     <form action="/submit_contact" method="post" class="mt-4">
