@@ -19,7 +19,7 @@
 - **Database**: MySQL
 - **Version Control**: Git &
 
-## Set Instructions
+## Setup Instructions
 
 1. Clone the Repository
 
@@ -27,6 +27,7 @@
 cd home-online-directory
 ```
 2. Set Up a Virtual Environment
+
 Before installing the dependencies, it’s recommended to create a virtual environment:
 ```
 python3 -m venv venv
