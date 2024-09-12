@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
-from app.models import Agent, Location, Message
+from app.models import Agent, Location, Message, Rating
 from werkzeug.utils import secure_filename
 from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm, DeleteMessageForm
 from flask_login import current_user, login_required, logout_user
@@ -59,6 +59,7 @@ def agent(name):
     user = Agent.query.filter_by(name=name).first()
     if user is None:
         abort(404)
+    avg_rating = user.average_rating()
     form = MessageForm()
     if form.validate_on_submit():
         message = Message(
@@ -70,7 +71,7 @@ def agent(name):
         db.session.commit()
         flash('Your message has been sent successfully!', 'success')
         return redirect(url_for('main.public_agent_profile', name=user.name))
-    return render_template('agent_details.html', user=user, form=form)
+    return render_template('agent_details.html', user=user, form=form, avg_rating=avg_rating)
 
 
 # agent details route
@@ -106,6 +107,19 @@ def delete_message(message_id):
     flash('Message deleted successfully.', 'success')
     return redirect(url_for('main.agent_messages', name=agent.name))
 
+# route to handle rating submission
+@main.route('/rate_agent/<name>', methods=['POST'])
+@login_required
+def rate_agent(name):
+    user = Agent.query.filter_by(name=name).first()
+    if user is None:
+        abort(404)
+    rating_value = int(request.form['rating'])
+    rating = Rating(value=rating_value, agent_id=user.id)
+    db.session.add(rating)
+    db.session.commit()
+    flash('Your rating has been submitted!', 'success')
+    return redirect(url_for('main.agent', name=user.name))
 
 # agent delete profile route
 @main.route('/agent_profile/<int:user_id>')

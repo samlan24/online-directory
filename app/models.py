@@ -4,6 +4,7 @@ from flask_login import UserMixin, login_required
 from flask import current_app
 from . import login_manager
 from datetime import datetime
+from sqlalchemy import func
 
 # Agent model
 class Agent(UserMixin, db.Model):
@@ -17,11 +18,8 @@ class Agent(UserMixin, db.Model):
     description = db.Column(db.String(255))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     image_url = db.Column(db.String(255))
+    ratings = db.relationship('Rating', backref='agent', lazy='dynamic')
     messages = db.relationship('Message', backref='agent', lazy='dynamic')
-
-
-
-
 
     # defining default role for new agents
     def __init__(self, **kwargs):
@@ -58,6 +56,11 @@ class Agent(UserMixin, db.Model):
     @login_manager.user_loader
     def load_user(user_id):
         return Agent.query.get(int(user_id))
+
+    # calculating average rating
+    def average_rating(self):
+        avg_rating = db.session.query(func.avg(Rating.value)).filter(Rating.agent_id == self.id).scalar()
+        return round(avg_rating, 1) if avg_rating else None
 
     def __repr__(self):
         return f'<Agent {self.name}, {self.email}>'
@@ -113,3 +116,8 @@ class Message(db.Model):
         return f'<Message {self.name}, {self.email}>'
 
 
+class Rating(db.Model):
+    __tablename__ = 'ratings'
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.Integer, nullable=False)
+    agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=False)
