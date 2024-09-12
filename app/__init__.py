@@ -31,9 +31,6 @@ def create_app():
     # import models
     from app.models import Location, Agent
 
-    # import routes
-    from app.agent.routes import agent_bp
-    app.register_blueprint(agent_bp, url_prefix='/api')
 
     # import main pages of the app
     from app.main.routes import main
