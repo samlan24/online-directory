@@ -61,8 +61,15 @@ class Agent(UserMixin, db.Model):
 
     # calculating average rating
     def average_rating(self):
+        """calculates the average rating of an agent"""
         avg_rating = db.session.query(func.avg(Rating.value)).filter(Rating.agent_id == self.id).scalar()
         return round(avg_rating, 1) if avg_rating else None
+
+    def create_notification(self, message):
+        """Creates a notification for the agent."""
+        notification = Notification(agent_id=self.id, message=message)
+        db.session.add(notification)
+        db.session.commit()
 
     def __repr__(self):
         return f'<Agent {self.name}, {self.email}>'

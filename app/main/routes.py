@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
-from app.models import Agent, Location, Message, Rating
+from app.models import Agent, Location, Message, Rating, Notification
 from werkzeug.utils import secure_filename
 from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm, DeleteMessageForm
 from flask_login import current_user, login_required, logout_user
@@ -92,7 +92,9 @@ def agent(name):
         abort(404)
     avg_rating = user.average_rating()
     form = MessageForm()
+
     if form.validate_on_submit():
+        # Create the message
         message = Message(
             email=form.email.data,
             agent_id=user.id,
@@ -100,10 +102,14 @@ def agent(name):
         )
         db.session.add(message)
         db.session.commit()
+
+        # Trigger the notification after the message is saved
+        user.create_notification(f"You have received a new message from {form.email.data}")
+
         flash('Your message has been sent successfully!', 'success')
         return redirect(url_for('main.public_agent_profile', name=user.name))
-    return render_template('agent_details.html', user=user, form=form, avg_rating=avg_rating)
 
+    return render_template('agent_details.html', user=user, form=form, avg_rating=avg_rating)
 
 # agent details route
 @main.route('/agent_details/<name>')
@@ -154,7 +160,6 @@ def rate_agent(name):
     return redirect(url_for('main.agent', name=user.name))
 
 
-
 # edit profile route
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -186,6 +191,7 @@ def edit_profile():
 @main.route('/delete_profile', methods=['POST', 'GET'])
 @login_required
 def delete_profile():
+    """deletes agent profile"""
     form = DeleteProfileForm()
     if form.validate_on_submit():
         agent = Agent.query.get_or_404(current_user.id)
@@ -195,3 +201,26 @@ def delete_profile():
         flash("Your profile has been deleted")
         return redirect(url_for('main.index'))
     return render_template('delete_profile.html', form=form)
+
+
+@main.route('/notifications')
+@login_required
+def notifications():
+    """handles notifications"""
+    agent = Agent.query.get(current_user.id)
+    unread_notifications = Notification.query.filter_by(agent_id=agent.id, read=False).all()
+    unread_count = len(unread_notifications)
+
+    return render_template('navbar.html', unread_count=unread_count, notifications=unread_notifications)
+
+
+@main.route('/read_notification/<int:notification_id>', methods=['POST'])
+@login_required
+def read_notification(notification_id):
+    """marks notification as read"""
+    notification = Notification.query.get_or_404(notification_id)
+    if notification.agent_id != current_user.id:
+        abort(403)
+    notification.read = True
+    db.session.commit()
+    return redirect(url_for('main.notifications'))
