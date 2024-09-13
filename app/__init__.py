@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 
+
 db = SQLAlchemy()
 bootstrap = Bootstrap()
 migrate = Migrate()
