@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for
+from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for,jsonify
 from app.models import Agent, Location, Message, Rating, Notification
 from werkzeug.utils import secure_filename
 from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm, DeleteMessageForm
@@ -104,7 +104,9 @@ def agent(name):
         db.session.commit()
 
         # Trigger the notification after the message is saved
-        user.create_notification(f"You have received a new message from {form.email.data}")
+        unread_count = Notification.query.filter_by(agent_id=user.id, read=False).count()
+        notification_message = f'You have {unread_count + 1} notification{"s" if unread_count + 1 > 1 else ""}'
+        user.create_notification(notification_message)
 
         flash('Your message has been sent successfully!', 'success')
         return redirect(url_for('main.public_agent_profile', name=user.name))
@@ -205,22 +207,20 @@ def delete_profile():
 
 @main.route('/notifications')
 @login_required
-def notifications():
-    """handles notifications"""
-    agent = Agent.query.get(current_user.id)
-    unread_notifications = Notification.query.filter_by(agent_id=agent.id, read=False).all()
-    unread_count = len(unread_notifications)
+def get_notifications():
+    notifications = Notification.query.filter_by(agent_id=current_user.id, read=False).order_by(Notification.timestamp.desc()).all()
+    return jsonify([{
+        'id': notification.id,
+        'message': notification.message,
+        'timestamp': notification.timestamp
+    } for notification in notifications])
 
-    return render_template('navbar.html', unread_count=unread_count, notifications=unread_notifications)
 
-
-@main.route('/read_notification/<int:notification_id>', methods=['POST'])
+@main.route('/notifications/mark_as_read', methods=['POST'])
 @login_required
-def read_notification(notification_id):
-    """marks notification as read"""
-    notification = Notification.query.get_or_404(notification_id)
-    if notification.agent_id != current_user.id:
-        abort(403)
-    notification.read = True
+def mark_notifications_as_read():
+    notifications = Notification.query.filter_by(agent_id=current_user.id, read=False).all()
+    for notification in notifications:
+        notification.is_read = True
     db.session.commit()
-    return redirect(url_for('main.notifications'))
+    return jsonify({'status': 'success'})
