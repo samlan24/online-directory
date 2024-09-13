@@ -129,6 +129,7 @@ def agent_messages(name):
 @main.route('/delete_message/<int:message_id>', methods=['POST'])
 @login_required
 def delete_message(message_id):
+    """deletes a message"""
     message = Message.query.get_or_404(message_id)
     agent = Agent.query.get_or_404(message.agent_id)
     if agent != current_user:
@@ -141,6 +142,7 @@ def delete_message(message_id):
 # route to handle rating submission
 @main.route('/rate_agent/<name>', methods=['POST'])
 def rate_agent(name):
+    """submits user rating"""
     user = Agent.query.filter_by(name=name).first()
     if user is None:
         abort(404)
@@ -151,19 +153,13 @@ def rate_agent(name):
     flash('Your rating has been submitted!', 'success')
     return redirect(url_for('main.agent', name=user.name))
 
-# agent delete profile route
-@main.route('/agent_profile/<int:user_id>')
-@login_required
-def profile(user_id):
-    user = Agent.query.get_or_404(user_id)
-    form = DeleteProfileForm()
-    return render_template('agent.html', user=user, form=form)
 
 
 # edit profile route
 @main.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    """allows agent to edit profile"""
     form = EditProfileForm()
     form.location.choices = [(location.id, location.name) for location in Location.query.all()]
     if form.validate_on_submit():
