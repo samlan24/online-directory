@@ -24,7 +24,7 @@
 1. **Clone the Repository**
 
 ```git clone https://github.com/your-username/online-directory.git
-cd home-online-directory
+cd online-directory
 ```
 2. **Set Up a Virtual Environment**
 
