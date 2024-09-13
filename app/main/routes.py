@@ -140,7 +140,6 @@ def delete_message(message_id):
 
 # route to handle rating submission
 @main.route('/rate_agent/<name>', methods=['POST'])
-@login_required
 def rate_agent(name):
     user = Agent.query.filter_by(name=name).first()
     if user is None:
