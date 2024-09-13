@@ -6,8 +6,9 @@ from . import login_manager
 from datetime import datetime
 from sqlalchemy import func
 
-# Agent model
+
 class Agent(UserMixin, db.Model):
+    """agent model"""
     __tablename__ = 'agents'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -20,6 +21,7 @@ class Agent(UserMixin, db.Model):
     image_url = db.Column(db.String(255))
     ratings = db.relationship('Rating', backref='agent', lazy='dynamic')
     messages = db.relationship('Message', backref='agent', lazy='dynamic')
+    notifications = db.relationship('Notification', backref='agent', lazy='dynamic')
 
     # defining default role for new agents
     def __init__(self, **kwargs):
@@ -65,8 +67,9 @@ class Agent(UserMixin, db.Model):
     def __repr__(self):
         return f'<Agent {self.name}, {self.email}>'
 
-# Location model
+
 class Location(db.Model):
+    """location model"""
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -75,7 +78,9 @@ class Location(db.Model):
     def __repr__(self):
         return f'{self.name}'
 
+
 class Role(db.Model):
+    """role model"""
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -106,6 +111,7 @@ class Permission:
 
 
 class Message(db.Model):
+    """message model"""
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False)
     agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=False)
@@ -117,7 +123,18 @@ class Message(db.Model):
 
 
 class Rating(db.Model):
+    """rating model"""
     __tablename__ = 'ratings'
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Integer, nullable=False)
     agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=False)
+
+
+class Notification(db.Model):
+    """notification model"""
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    read = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
