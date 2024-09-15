@@ -2,7 +2,8 @@
 
 ## Overview
 
-**RentNest Directory** is a web-based platform that allows users to search for real estate agents, movers, and cleaners based on name, location, and ratings. The platform enables users to browse agent profiles, rate agents, send messages, and book appointments.
+**RentNest Directory** is a web-based platform that allows users to search for real estate agents, movers, and cleaners based on name, location, and ratings. The platform enables users to browse agent profiles, rate agents, send messages, and book appointments. You can read the development journey here > https://withallan.hashnode.dev/the-journey-behind-creating-rentnest-lessons-learned
+Here's a demonstration of how it works: https://samlan24.github.io/online-directory/
 
 ## Features
 
