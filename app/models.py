@@ -21,7 +21,6 @@ class Agent(UserMixin, db.Model):
     image_url = db.Column(db.String(255))
     ratings = db.relationship('Rating', backref='agent', lazy='dynamic')
     messages = db.relationship('Message', backref='agent', lazy='dynamic')
-    notifications = db.relationship('Notification', backref='agent', lazy='dynamic')
 
     # defining default role for new agents
     def __init__(self, **kwargs):
@@ -65,11 +64,6 @@ class Agent(UserMixin, db.Model):
         avg_rating = db.session.query(func.avg(Rating.value)).filter(Rating.agent_id == self.id).scalar()
         return round(avg_rating, 1) if avg_rating else None
 
-    def create_notification(self, message):
-        """Creates a notification for the agent."""
-        notification = Notification(agent_id=self.id, message=message)
-        db.session.add(notification)
-        db.session.commit()
 
     def __repr__(self):
         return f'<Agent {self.name}, {self.email}>'
@@ -136,12 +130,3 @@ class Rating(db.Model):
     value = db.Column(db.Integer, nullable=False)
     agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=False)
 
-
-class Notification(db.Model):
-    """notification model"""
-    __tablename__ = 'notifications'
-    id = db.Column(db.Integer, primary_key=True)
-    agent_id = db.Column(db.Integer, db.ForeignKey('agents.id'), nullable=False)
-    message = db.Column(db.Text, nullable=False)
-    read = db.Column(db.Boolean, default=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

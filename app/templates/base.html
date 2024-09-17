@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{% block title %}Rentnest{% endblock %}</title>
     <link
       rel="stylesheet"
@@ -90,31 +91,6 @@
                   >Messages</a
                 >
               </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  onclick="markNotificationsAsRead()"
-                >
-                  <i class="fa fa-bell"></i>
-                  <span
-                    class="badge badge-danger"
-                    id="notification-count"
-                  ></span>
-                </a>
-                <div
-                  class="dropdown-menu dropdown-menu-right"
-                  aria-labelledby="navbarDropdown"
-                  id="notifications-dropdown"
-                >
-                  <!-- Notifications will be dynamically loaded here -->
-                </div>
-              </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.logout') }}"
                   >Sign Out</a
@@ -160,7 +136,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-6 d-flex justify-content-start">
-              <p class="mb-0">&copy; 2023 Rentnest</p>
+              <p class="mb-0">&copy; 2024 Rentnest</p>
             </div>
             <div class="col-md-6 d-flex justify-content-end">
               <a href="https://www.facebook.com" class="text-dark mx-2">
@@ -227,10 +203,14 @@
       });
 
       function markNotificationsAsRead() {
+        const csrfToken = document.querySelector(
+          "meta[name=csrf-token]"
+        ).content;
         fetch("/notifications/mark_as_read", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
           },
         })
           .then((response) => response.json())
@@ -243,7 +223,10 @@
             console.error("Error marking notifications as read:", error)
           );
       }
-      document.getElementById('navbarDropdown').addEventListener('click', markNotificationsAsRead);
+
+      document
+        .getElementById("navbarDropdown")
+        .addEventListener("click", markNotificationsAsRead);
     </script>
   </body>
 </html>

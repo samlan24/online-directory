@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, current_app, render_template, abort, flash, request, redirect, url_for,jsonify
-from app.models import Agent, Location, Message, Rating, Notification
+from app.models import Agent, Location, Message, Rating
 from werkzeug.utils import secure_filename
 from app.auth.forms import EditProfileForm, DeleteProfileForm, MessageForm, DeleteMessageForm
 from flask_login import current_user, login_required, logout_user
@@ -203,24 +203,3 @@ def delete_profile():
         flash("Your profile has been deleted")
         return redirect(url_for('main.index'))
     return render_template('delete_profile.html', form=form)
-
-
-@main.route('/notifications')
-@login_required
-def get_notifications():
-    notifications = Notification.query.filter_by(agent_id=current_user.id, read=False).order_by(Notification.timestamp.desc()).all()
-    return jsonify([{
-        'id': notification.id,
-        'message': notification.message,
-        'timestamp': notification.timestamp
-    } for notification in notifications])
-
-
-@main.route('/notifications/mark_as_read', methods=['POST'])
-@login_required
-def mark_notifications_as_read():
-    notifications = Notification.query.filter_by(agent_id=current_user.id, read=False).all()
-    for notification in notifications:
-        notification.is_read = True
-    db.session.commit()
-    return jsonify({'status': 'success'})
