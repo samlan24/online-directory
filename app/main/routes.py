@@ -103,11 +103,6 @@ def agent(name):
         db.session.add(message)
         db.session.commit()
 
-        # Trigger the notification after the message is saved
-        unread_count = Notification.query.filter_by(agent_id=user.id, read=False).count()
-        notification_message = f'You have {unread_count + 1} notification{"s" if unread_count + 1 > 1 else ""}'
-        user.create_notification(notification_message)
-
         flash('Your message has been sent successfully!', 'success')
         return redirect(url_for('main.public_agent_profile', name=user.name))
 
@@ -131,6 +126,7 @@ def agent_messages(name):
     if user is None or user != current_user:
         abort(404)
     messages = Message.query.filter_by(agent_id=user.id).order_by(Message.timestamp.desc()).all()
+
     return render_template('agent_messages.html', user=user, messages=messages)
 
 # deleting messages route
@@ -146,6 +142,7 @@ def delete_message(message_id):
     db.session.commit()
     flash('Message deleted successfully.', 'success')
     return redirect(url_for('main.agent_messages', name=agent.name))
+
 
 # route to handle rating submission
 @main.route('/rate_agent/<name>', methods=['POST'])
@@ -203,3 +200,6 @@ def delete_profile():
         flash("Your profile has been deleted")
         return redirect(url_for('main.index'))
     return render_template('delete_profile.html', form=form)
+
+
+

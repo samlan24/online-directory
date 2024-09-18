@@ -22,6 +22,7 @@ class Agent(UserMixin, db.Model):
     ratings = db.relationship('Rating', backref='agent', lazy='dynamic')
     messages = db.relationship('Message', backref='agent', lazy='dynamic')
 
+
     # defining default role for new agents
     def __init__(self, **kwargs):
         super(Agent, self).__init__(**kwargs)

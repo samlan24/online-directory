@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{% block title %}Rentnest{% endblock %}</title>
     <link
       rel="stylesheet"
@@ -45,6 +45,20 @@
       .flash-messages .alert {
         margin: 0;
         border-radius: 0;
+      }
+      .nav-link {
+        position: relative;
+        display: inline-block;
+      }
+
+      .badge-danger {
+        position: absolute;
+        top: -5px;
+        right: -10px;
+        padding: 5px 10px;
+        border-radius: 50%;
+        background-color: red;
+        color: white;
       }
     </style>
   </head>
@@ -88,8 +102,10 @@
                 <a
                   class="nav-link"
                   href="{{ url_for('main.agent_messages', name=current_user.name) }}"
-                  >Messages</a
-                >
+                  >Messages
+                  <span class="badge badge-danger" id="unread-message-count"
+                    ></span>
+                </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.logout') }}"
@@ -168,65 +184,7 @@
         }, 1000);
       });
     </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        fetch("/notifications")
-          .then((response) => response.json())
-          .then((data) => {
-            const notificationCount = data.length;
-            const notificationCountElement =
-              document.getElementById("notification-count");
-            const notificationsDropdown = document.getElementById(
-              "notifications-dropdown"
-            );
 
-            if (notificationCount > 0) {
-              notificationCountElement.textContent = notificationCount;
-              data.forEach((notification) => {
-                const notificationItem = document.createElement("a");
-                notificationItem.classList.add("dropdown-item");
-                notificationItem.textContent = `${
-                  notification.message
-                } - ${new Date(notification.timestamp).toLocaleString()}`;
-                notificationsDropdown.appendChild(notificationItem);
-              });
-            } else {
-              const noNotificationsItem = document.createElement("a");
-              noNotificationsItem.classList.add("dropdown-item");
-              noNotificationsItem.textContent = "No new notifications";
-              notificationsDropdown.appendChild(noNotificationsItem);
-            }
-          })
-          .catch((error) =>
-            console.error("Error fetching notifications:", error)
-          );
-      });
 
-      function markNotificationsAsRead() {
-        const csrfToken = document.querySelector(
-          "meta[name=csrf-token]"
-        ).content;
-        fetch("/notifications/mark_as_read", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              document.getElementById("notification-count").textContent = "";
-            }
-          })
-          .catch((error) =>
-            console.error("Error marking notifications as read:", error)
-          );
-      }
-
-      document
-        .getElementById("navbarDropdown")
-        .addEventListener("click", markNotificationsAsRead);
-    </script>
   </body>
 </html>
